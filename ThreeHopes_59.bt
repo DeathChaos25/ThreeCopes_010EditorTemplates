@@ -1,0 +1,239 @@
+//------------------------------------------------
+//--- 010 Editor Binary Template
+//
+//      File: FE Three Hopes 59.bin from linkdata a
+//   Authors: DeathChaos
+//   Version: 1.00
+//   History
+//   1.00    2022-06-10  DeathChaos - started this
+//------------------------------------------------
+
+typedef char bool;
+typedef char s8;
+typedef uchar u8;
+typedef int16 s16;
+typedef uint16 u16;
+typedef int16 s16;
+typedef int32 s32;
+typedef uint32 u32;
+typedef int64 s64;
+typedef uint64 u64;
+typedef hfloat f16;
+typedef float f32;
+typedef double f64;
+
+LittleEndian();
+
+typedef enum<u16>
+{
+  Shez = 0,
+  Shez_F,
+  Byleth_M,
+  Byleth_F,
+  Edelgard,
+  Hubert,
+  Dorothea,
+  Ferdinand,
+  Bernadetta,
+  Caspar,
+  Petra,
+  Linhardt,
+  Dimitri,
+  Dedue,
+  Felix,
+  Mercedes,
+  Ashe,
+  Annette,
+  Sylvain,
+  Ingrid,
+  Claude,
+  Lorenz,
+  Hilda,
+  Raphael,
+  Lysithea,
+  Ignatz,
+  Marianne,
+  Leonie,
+  Yuri,
+  Balthus,
+  Constance,
+  Hapi,
+  Manuela,
+  Hanneman,
+  Seteth,
+  Flayn,
+  _37,
+  _38,
+  Alois,
+  Gustave,
+  Shamir,
+  Jeralt,
+  Rhea,
+  Anna,
+  Jeritza,
+  Kronya,
+  _48,
+  _49,
+  Cornelia,
+  Death_Knight,
+  Kostas,
+  _53,
+  _54,
+  Randolph,
+  _56,
+  Rodrigue,
+  Judith,
+  Nader,
+  Monica,
+  Lord_Arundel,
+  _62,
+  _63,
+  _64,
+  _65,
+  _66,
+  _67,
+  _68,
+  _69,
+  Duke_Aegir,
+  Fleche,
+  _72,
+  _73,
+  Ladislava,
+  _75,
+  _76,
+  _77,
+  _78,
+  Holst,
+  _80,
+  _81,
+  _82,
+  Count_Bergliez,
+  Rufus,
+  Shahid,
+  Count_Gloucester,
+  Margrave_Gautier,
+  Count_Hevring,
+  Count_Varley,
+  _90,
+  _91,
+  _92,
+  _93,
+  Count_Duval,
+  _95,
+  _96,
+  _97,
+  _98,
+  _99,
+  _100,
+  _101,
+  Getz,
+  Captain_Berling,
+  Lazley,
+  _105,
+  _106,
+  _107,
+  _108,
+  _109,
+  _110,
+  _111,
+  _112,
+  _113,
+  _114,
+  _115,
+  Viscount_Elidure,
+  _117,
+  Viscount_Kleiman,
+  W_Church_Priest,
+  W_Church_Bishops,
+  _121,
+  _122,
+  Gilbert,
+  _124,
+  Volkhard,
+  Ludwig,
+  Leopold,
+  Erwin,
+  Matthias,
+  Waldemar,
+  Gregoire
+} UnitNames;
+
+typedef struct
+{
+  UnitNames CharacterID;
+  s16 field02;
+  s16 field04;
+  s16 field06;
+  s16 field08;
+  s16 field0a;
+  s16 field0c;
+  s16 field0e;
+  s16 field10;
+  s16 field12;
+  s16 field14;
+  s16 field16;
+  s16 field18;
+  s16 field1a;
+  s16 field1c;
+  s16 field1e;
+  s16 field20;
+  s16 field22;
+  s16 field24;
+  s16 field26;
+  s16 field28;
+  s16 field2a;
+  s16 field2c;
+  s16 field2e;
+  s16 field30;
+  s16 field32;
+  s16 field34;
+  s16 field36;
+  s16 field38;
+  s8 AgeAcademy;
+  s8 field3b;
+  s8 AgeWarBE;
+  s8 AgeWarBL;
+  s8 AgeWarGD;
+  s8 field3f;
+  s8 field40;
+  s8 field41;
+  s8 field42;
+  s8 field43;
+  s8 field44;
+  u8 HeightAcademy;
+  u8 HeightWar;
+  u8 field47;
+} CharMiscData<optimize=false, read=GetCharNames>;
+
+string GetCharNames(CharMiscData &i)
+{
+  string result;
+  int Age1 = i.AgeAcademy;
+  int Age2 = 0;
+  int Height1 = i.HeightAcademy;
+  int Height2 = i.HeightWar;
+
+  if ( i.AgeWarBE > 0 )
+  {
+    Age2 = i.AgeWarBE;
+  }
+  else if ( i.AgeWarBL > 0 )
+  {
+    Age2 = i.AgeWarBL;
+  }
+  else if ( i.AgeWarGD > 0 )
+  {
+    Age2 = i.AgeWarGD;
+  }
+
+  SPrintf( result, "%s - Age ( %d, %d ), Height ( %03dcm - %03dcm)",
+   EnumToString(i.CharacterID), Age1, Age2, Height1, Height2);
+  return result;
+}
+
+typedef struct
+{
+  CharMiscData Data[ FileSize() /  0x48 ];
+} CharMiscDataFile <optimize=false>;
+
+CharMiscDataFile file; 

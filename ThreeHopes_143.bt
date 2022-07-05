@@ -1,0 +1,160 @@
+//------------------------------------------------
+//--- 010 Editor Binary Template
+//
+//      File: FE Three Hopes 59.bin from linkdata a
+//   Authors: DeathChaos
+//   Version: 1.00
+//   History
+//   1.00    2022-06-10  DeathChaos - started this
+//------------------------------------------------
+
+typedef char bool;
+typedef char s8;
+typedef uchar u8;
+typedef int16 s16;
+typedef uint16 u16;
+typedef int16 s16;
+typedef int32 s32;
+typedef uint32 u32;
+typedef int64 s64;
+typedef uint64 u64;
+typedef hfloat f16;
+typedef float f32;
+typedef double f64;
+
+LittleEndian();
+
+local uint __RandomSeed = 0xDEADBABE;
+local uint __RandomBit = 0;
+local uint __RandomCount = 0;
+
+void resetRandom() {
+__RandomSeed = 0xDEADBABE;
+ __RandomBit = 0;
+__RandomCount = 0;
+}
+ 
+uint MyRandom( uint to )
+{
+    ++__RandomCount;
+    __RandomBit  = ( (__RandomSeed >> 0 ) ^ ( __RandomSeed >> 2 ) ^ ( __RandomSeed >> 3 ) ^ ( __RandomSeed >> 5 ) ) & 1;
+    __RandomSeed = ( ( ( ( __RandomBit << 15 ) | ( __RandomSeed >> 1 ) ) + ( 0xBABE / __RandomCount ) ) % to );
+
+    while( __RandomSeed < 0 )
+        __RandomSeed += to;
+
+    return __RandomSeed;
+}
+
+uint RandomColor()
+{
+    return MyRandom( 0xFFFFFFFF );
+}
+
+SetBackColor( RandomColor() );
+
+typedef enum <s16> CHARACTERS
+{
+  ShezM,
+  ShezF,
+  Byleth,
+  BylethF,
+  Edelgard,
+  Hubert,
+  Dorothea,
+  Ferdinand,
+  Bernadetta,
+  Caspar,
+  Petra,
+  Linhardt,
+  Dimitri,
+  Dedue,
+  Felix,
+  Mercedes,
+  Ashe,
+  Annette,
+  Sylvain,
+  Ingrid,
+  Claude,
+  Lorenz,
+  Hilda,
+  Raphael,
+  Lysithea,
+  Ignatz,
+  Marianne,
+  Leonie,
+  Yuri,
+  Constance,
+  Balthus,
+  Hapi,
+  Manuela,
+  Hanneman,
+  Seteth,
+  Flayn,
+  ff,
+  Catherine,
+  gg,
+  hh,
+  Shamir,
+  Jeralt,
+  Rhea,
+  Anna,
+  Jeritza,
+  Rodrigue,
+  Monica,
+  Holst,
+  Placeholder1,
+  Placeholder2,
+  Placeholder3,
+  Sothis,
+  Arval,
+  Gatekeeper
+}Characters;
+
+typedef struct
+{
+  u16 BaseStat;
+  u16 GrowthPerLevel[120];
+} StatGrowthDataHP<optimize=false, name="Growths">;
+
+typedef struct
+{
+  u8 BaseStat;
+  u8 GrowthPerLevel[120];
+} StatGrowthData<optimize=false, name="Growths">;
+
+typedef struct
+{
+  u16 padding;
+  StatGrowthDataHP HP<name="HP", read=Str("Base Value: %d", BaseStat)>;
+  u8 align;
+  StatGrowthData Str<name="Str", read=Str("Base Value: %d", BaseStat)>;
+  StatGrowthData Mag<name="Mag", read=Str("Base Value: %d", BaseStat)>;
+  StatGrowthData Skl<name="Dex", read=Str("Base Value: %d", BaseStat)>;
+  StatGrowthData Spd<name="Spd", read=Str("Base Value: %d", BaseStat)>;
+  StatGrowthData Lck<name="Lck", read=Str("Base Value: %d", BaseStat)>;
+  StatGrowthData Def<name="Def", read=Str("Base Value: %d", BaseStat)>;
+  StatGrowthData Res<name="Res", read=Str("Base Value: %d", BaseStat)>;
+  StatGrowthData Cha<name="Char", read=Str("Base Value: %d", BaseStat)>;
+  u16 padding;
+  u8 align;
+  local Characters tmp;
+  tmp = i;
+} CharGrowthData<optimize=false, name="Character Growth Data">;
+
+typedef struct
+{
+  local int i<hidden=true>;
+  for ( i = 0; i < 100; i++ )
+  {
+    CharGrowthData Data<read=GetCharNames>;
+    SetBackColor( RandomColor() );
+  }
+} CharGrowthDataFile <optimize=false>;
+
+string GetCharNames( CharGrowthData &j )
+{
+  return EnumToString(j.tmp);
+}
+
+CharGrowthDataFile file; 
